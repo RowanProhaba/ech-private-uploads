@@ -85,7 +85,7 @@
 						const li = fileProgress[file.name].li;
             if (res.success) {
                 const result = res.data.find(item => item.filename === file.name) || res.data[0];
-                li.html("✔ 已上傳: <a href='" + result.url + "' target='_blank'>" + result.filename + "</a> (ID: " + result.attachment_id + ")");
+                li.html("✔ 已上傳: <a href='" + result.url + "' target='_blank'>" + result.file_name + "</a> (ID: " + result.attachment_id + ")");
             } else {
                 li.text("✗ 上傳失敗: " + (res.data || "未知錯誤"));
             }
