@@ -216,10 +216,16 @@ class Ech_Private_Uploads_Admin
                 continue;
             }
 
+            // rename file
+			$info = pathinfo($files['name'][$i]);
+			$ext = isset($info['extension']) ? '.' . strtolower($info['extension']) : '';
+			$newname = wp_generate_password(10, false);
+			$file_name = $newname . $ext;
+
             // generate a unique filename
-            $filename = wp_unique_filename($target_dir, basename($files['name'][$i]));
-            $target_file = $target_dir . '/' . $filename;
-            $relative_path = $folder . '/' . $filename;
+            $file_name = wp_unique_filename($target_dir, $file_name);
+            $target_file = $target_dir . '/' . $file_name;
+            $relative_path = $folder . '/' . $file_name;
 
             // move file to target directory
             if (!move_uploaded_file($files['tmp_name'][$i], $target_file)) {
@@ -230,7 +236,7 @@ class Ech_Private_Uploads_Admin
             $attachment = [
                 'guid'           => WP_CONTENT_URL . '/' . $relative_path,
                 'post_mime_type' => $filetype['type'],
-                'post_title'     => sanitize_file_name($filename),
+                'post_title'     => sanitize_file_name($file_name),
                 'post_content'   => '',
                 'post_status'    => 'private',
                 'post_parent'    => 0,
@@ -239,7 +245,7 @@ class Ech_Private_Uploads_Admin
             // save to database
             $attachment_id = wp_insert_attachment($attachment, $relative_path);
             if (is_wp_error($attachment_id)) {
-                $errors[] = 'Failed to create attachment for ' . $filename . ': ' . $attachment_id->get_error_message();
+                $errors[] = 'Failed to create attachment for ' . $file_name . ': ' . $attachment_id->get_error_message();
                 continue;
             }
 
@@ -252,7 +258,7 @@ class Ech_Private_Uploads_Admin
             wp_update_attachment_metadata($attachment_id, $attachment_data);
 
             $results[] = [
-                'filename'      => $filename,
+                'file_name'      => $file_name,
                 'url'           => WP_CONTENT_URL . '/' . $relative_path,
                 'mime_type'     => $filetype['type'],
                 'attachment_id' => $attachment_id,
