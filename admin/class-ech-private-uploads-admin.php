@@ -350,12 +350,28 @@ class Ech_Private_Uploads_Admin
         }
     }
 
-		public function add_robots_txt_rules($output, $public)
+	public function add_robots_txt_rules($output, $public)
     {
         $folder = get_option('ech_private_uploads_folder_name', 'ech-private-uploads');
-        $output .= "User-agent: *\n";
-        $output .= "Disallow: /wp-content/{$folder}/\n";
+        // 避免重複 User-agent: *
+        if (strpos($output, 'User-agent: *') === false) {
+            $output .= "User-agent: *\n";
+        }
+        // 加 Disallow 規則 避免重複
+        if (strpos($output, "Disallow: /wp-content/{$folder}/") === false) {
+            $output .= "Disallow: /wp-content/{$folder}/\n";
+        }
         return $output;
+    }
+
+    public function add_noindex_headers()
+    {
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $folder = get_option('ech_private_uploads_folder_name', 'ech-private-uploads');
+            if (strpos($_SERVER['REQUEST_URI'], "/wp-content/{$folder}/") !== false) {
+                header('X-Robots-Tag: noindex, nofollow');
+            }
+        }
     }
 
 

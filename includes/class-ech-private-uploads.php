@@ -176,6 +176,8 @@ class Ech_Private_Uploads {
 
 		// ^^^ add robots.txt
 		$this->loader->add_filter('robots_txt', $plugin_admin, 'add_robots_txt_rules', 10, 2);
+
+		$this->loader->add_action('send_headers', $plugin_admin, 'add_noindex_headers');
 	}
 
 	/**
