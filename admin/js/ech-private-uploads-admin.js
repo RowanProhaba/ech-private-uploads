@@ -75,7 +75,7 @@
 						const xhr = new window.XMLHttpRequest();
 						xhr.upload.addEventListener("progress", function(evt) {
 								if (evt.lengthComputable) {
-										var percent = Math.round((evt.loaded / evt.total) * 100);
+										const percent = Math.round((evt.loaded / evt.total) * 100);
 										fileProgress[file.name].progress.css("width", percent + "%").text(percent + "%");
 								}
 						}, false);
