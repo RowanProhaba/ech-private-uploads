@@ -354,7 +354,7 @@ class Ech_Private_Uploads_Admin
     {
         $folder = get_option('ech_private_uploads_folder_name', 'ech-private-uploads');
         // 避免重複 User-agent: *
-        if (strpos($output, 'User-agent: *') === false) {
+        if (strpos($output, 'User-agent: *') === false || strpos($output, 'User-Agent: *') === false) {
             $output .= "User-agent: *\n";
         }
         // 加 Disallow 規則 避免重複
